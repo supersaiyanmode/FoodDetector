@@ -30,69 +30,51 @@
 #include <map>
 #include <numeric>
 
-//Use the cimg namespace to access the functions easily
-using namespace cimg_library;
-using namespace std;
 
-// Dataset data structure, set up so that e.g. dataset["bagel"][3] is
-// filename of 4th bagel image in the dataset
-typedef map<string, vector<string> > Dataset;
-
+#include <defs.h>
+#include <utils.h>
 #include <Classifier.h>
 #include <NearestNeighbor.h>
 
-// Figure out a list of files in a given directory.
-//
-vector<string> files_in_directory(const string &directory, bool prepend_directory = false)
-{
-  vector<string> file_list;
-  DIR *dir = opendir(directory.c_str());
-  if(!dir)
-    throw std::string("Can't find directory " + directory);
-  
-  struct dirent *dirent;
-  while ((dirent = readdir(dir))) 
-    if(dirent->d_name[0] != '.')
-      file_list.push_back((prepend_directory?(directory+"/"):"")+dirent->d_name);
-
-  closedir(dir);
-  return file_list;
-}
+//Use the cimg namespace to access the functions easily
+using namespace cimg_library;
 
 int main(int argc, char **argv)
 {
-  try {
-    if(argc < 3)
-      throw string("Insufficent number of arguments");
+	try {
+		if(argc < 3)
+			throw string("Insufficent number of arguments");
 
-    string mode = argv[1];
-    string algo = argv[2];
+		std::string mode = argv[1];
+		std::string algo = argv[2];
 
-    // Scan through the "train" or "test" directory (depending on the
-    //  mode) and builds a data structure of the image filenames for each class.
-    Dataset filenames; 
-    vector<string> class_list = files_in_directory(mode);
-    for(vector<string>::const_iterator c = class_list.begin(); c != class_list.end(); ++c)
-      filenames[*c] = files_in_directory(mode + "/" + *c, true);
+		// Scan through the "train" or "test" directory (depending on the
+		//  mode) and builds a data structure of the image filenames for each class.
+		Dataset filenames; 
+		std::vector<std::string> class_list = list_files(mode);
+		for(std::vector<std::string>::const_iterator c = class_list.begin(); c != class_list.end(); ++c)
+			filenames[*c] = list_files(mode + "/" + *c, true);
 
-    // set up the classifier based on the requested algo
-    Classifier *classifier=0;
-    if(algo == "nn")
-      classifier = new NearestNeighbor(class_list);
-    else
-      throw std::string("unknown classifier " + algo);
+		// set up the classifier based on the requested algo
+		Classifier *classifier=0;
+		if(algo == "nn")
+			classifier = new NearestNeighbor(class_list);
+		else
+			throw std::string("unknown classifier " + algo);
 
-    // now train or test!
-    if(mode == "train")
-      classifier->train(filenames);
-    else if(mode == "test")
-      classifier->test(filenames);
-    else
-      throw std::string("unknown mode!");
-  }
-  catch(const string &err) {
-    cerr << "Error: " << err << endl;
-  }
+		// now train or test!
+		if(mode == "train")
+			classifier->train(filenames);
+		else if(mode == "test")
+			classifier->test(filenames);
+		else
+			throw std::string("unknown mode!");
+
+		delete classifier;
+	}
+	catch(const string &err) {
+		cerr << "Error: " << err << endl;
+	}
 }
 
 

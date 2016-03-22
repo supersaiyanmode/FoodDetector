@@ -3,10 +3,10 @@
 BIN = a3
 
 # Define source files
-SRCS = ./siftpp/sift.cpp ./a3.cpp
+SRCS = ./src/Classifier.cpp ./src/NearestNeighbor.cpp ./src/utils.cpp ./a3.cpp ./siftpp/sift.cpp
 
 # Define header file paths
-INCPATH = -I./ -Isiftpp -I/opt/X11/include
+INCPATH = -I./ -Isiftpp -I/opt/X11/include -I include/
 
 # Define the -L library path(s)
 LDFLAGS = -O3
