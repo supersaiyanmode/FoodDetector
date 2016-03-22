@@ -1,12 +1,12 @@
 
 # Define executable name
-BIN = a.out
+BIN = a3
 
 # Define source files
 SRCS = ./siftpp/sift.cpp ./a3.cpp
 
 # Define header file paths
-INCPATH = -I./ -Isiftpp
+INCPATH = -I./ -Isiftpp -I/opt/X11/include
 
 # Define the -L library path(s)
 LDFLAGS = -O3
@@ -15,7 +15,7 @@ LDFLAGS = -O3
 LIBS = -lX11 -lpthread
 
 # Define Compile Flags
-COMPILEFLAGS = -Wall -pedantic -O3
+COMPILEFLAGS = -Wall -O3
 
 # Define Link Flags
 LINKFLAGS = 
