@@ -30,3 +30,8 @@
 # Test and train directories
 test/*
 train/*
+
+a3
+.depend
+nn_model.*.png
+
