@@ -13,16 +13,20 @@ public:
 };
 
 class SVM : public Classifier {
-	std::map<std::string, SVMCore*> svm_cores;
+	std::map<std::string, SVMCore*> svm_classifiers;
+	std::map<std::string, SVMCore*> svm_trainers;
+	std::string working_dir, cache_dir;
+
+	std::vector<double> get_feature_vector_cache(const std::string& filename);
 public:
-	SVM(const std::vector<std::string>&);
+	SVM(const std::vector<std::string>&, const std::string&);
 	virtual ~SVM();
 
 	void train(const Dataset&);
 	void load_model();
 	std::string classify(const std::string&);
 
-	virtual std::vector<double> get_feature_vector(const std::string& filename);
+	virtual std::vector<double> get_feature_vector(const std::string& filename) = 0;
 };
 
 #endif
