@@ -11,6 +11,6 @@ EigenSVM::~EigenSVM() {
 
 }
 
-std::vector<double> EigenSVM::get_feature_vector(const std::string& filename) {
+std::vector<double> EigenSVM::get_feature_vector(const std::string& filename, bool is_train_mode) {
 	return std::vector<double>();
 }

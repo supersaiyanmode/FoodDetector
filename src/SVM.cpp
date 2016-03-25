@@ -52,7 +52,7 @@ void SVM::train(const Dataset& data) {
 		for (std::vector<std::string>::const_iterator it1 = cur_files.begin(); it1 != cur_files.end(); it1++) {
 			std::cout<<"   Processing: "<<*it1<<std::endl;
 			int feature_pos = 1;
-			std::vector<double> features = get_feature_vector_cache(*it1);
+			std::vector<double> features = get_feature_vector_cache(*it1, true);
 			out<<"+1 ";
 			for (std::vector<double>::iterator it2 = features.begin(); it2 != features.end(); it2++) {
 				out<<feature_pos++<<":"<<*it2<<" ";
@@ -68,7 +68,7 @@ void SVM::train(const Dataset& data) {
 			for (std::vector<std::string>::const_iterator it2 = it1->second.begin(); 
 									it2 != it1->second.end(); it2++) {
 				int feature_pos = 1;
-				std::vector<double> features = get_feature_vector_cache(*it2);
+				std::vector<double> features = get_feature_vector_cache(*it2, true);
 				out<<"-1 ";
 				for (std::vector<double>::iterator it3 = features.begin(); it3 != features.end(); it3++) {
 					out<<feature_pos++<<":"<<*it3<<" ";
@@ -77,13 +77,16 @@ void SVM::train(const Dataset& data) {
 			}
 		}
 		out.close();
+
+		std::string outputModel = working_dir + "/" + cur_food_name + ".model.svm";
+		svm_core.train(inputFile, outputModel);
 	}
 }
 
 /*
  * Implements a file system based cache.
  */
-std::vector<double> SVM::get_feature_vector_cache(const std::string& filename) {
+std::vector<double> SVM::get_feature_vector_cache(const std::string& filename, bool train) {
 	std::cout<<"Trying: "<<filename<<std::endl;
 	std::string cached_name = filename;
 
@@ -101,7 +104,7 @@ std::vector<double> SVM::get_feature_vector_cache(const std::string& filename) {
 	}
 	inFile.close();
 
-	result = get_feature_vector(filename);
+	result = get_feature_vector(filename, train);
 	std::ofstream outFile((cache_dir + "/" + cached_name).c_str());
 	//Reference: http://stackoverflow.com/a/6406411/227884
 	std::copy(result.begin(), result.end(), std::ostream_iterator<double>(outFile, " "));

@@ -14,7 +14,7 @@ BaseSVM::~BaseSVM() {
 
 }
 
-std::vector<double> BaseSVM::get_feature_vector(const std::string& filename) {
+std::vector<double> BaseSVM::get_feature_vector(const std::string& filename, bool) {
 	CImg<double> input(filename.c_str());
 	CImg<double> resized = input.resize(10, 10, 1, 3);
 	CImg<double> grey = resized.spectrum() == 1? resized: resized.get_RGBtoHSI().get_channel(2);
