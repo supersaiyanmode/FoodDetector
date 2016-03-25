@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 		Classifier *classifier=0;
 		if(algo == "nn")
 			classifier = new NearestNeighbor(class_list);
-		else if (algo == "eigen")
+		else if (algo == "baseline")
 			classifier = new BaseSVM(class_list, "svm-test");
 		else
 			throw std::string("unknown classifier " + algo);
