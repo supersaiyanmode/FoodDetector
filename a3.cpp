@@ -35,6 +35,8 @@
 #include <utils.h>
 #include <Classifier.h>
 #include <NearestNeighbor.h>
+#include <SVM.h>
+#include <BaseSVM.h>
 
 //Use the cimg namespace to access the functions easily
 using namespace cimg_library;
@@ -59,6 +61,8 @@ int main(int argc, char **argv)
 		Classifier *classifier=0;
 		if(algo == "nn")
 			classifier = new NearestNeighbor(class_list);
+		else if (algo == "eigen")
+			classifier = new BaseSVM(class_list, "svm-test");
 		else
 			throw std::string("unknown classifier " + algo);
 
