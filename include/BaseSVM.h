@@ -1,5 +1,5 @@
-#ifndef __EIGEN_SVM_H__
-#define __EIGEN_SVM_H__
+#ifndef __BASE_SVM_H__
+#define __BASE_SVM_H__
 
 #include <SVM.h>
 
