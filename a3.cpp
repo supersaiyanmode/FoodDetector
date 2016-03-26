@@ -1,4 +1,4 @@
-// B657 assignment 3 skeleton code, D. Crandall
+ // B657 assignment 3 skeleton code, D. Crandall
 //
 // Compile with: "make"
 //
@@ -79,6 +79,103 @@ int getdirandfiles (string dir, vector<string> &allpathnfiles)
     }
         return 0;
 }
+void k_means_clustering(vector< vector<SiftDescriptor> >&trainingset, int k)
+{
+     k=2;
+    int maxitn=1000;
+    vector<vector<SiftDescriptor> >centroids;
+    
+    int ran[k];
+    ran[0]=rand()%trainingset.size();
+    for(int i=1;i<k;)
+    {
+        int r=rand()%trainingset.size();
+        bool repeat=false;
+        for(int j=0;j<i;j++)
+        {
+            if(ran[j]==r)
+            {
+                repeat=true;
+                break;
+            }
+        }
+        if(!repeat){
+            ran[i]=r;
+            i++;
+        }
+    }
+    
+    ////initial random centroids
+    for(int i=0;i<k;i++)
+    {
+        centroids.push_back(trainingset[ran[i]]);
+    }
+    cout<<trainingset.size()<<endl;
+    cout<<trainingset[0].size()<<endl;
+    vector<vector<SiftDescriptor> >clusters[k];
+    float interblockdist=0;
+    float previnterblockdist=0;
+    cout<<centroids.size()<<endl;
+    cout<<trainingset[0][0].descriptor.size()<<endl;
+    //vector<SiftDescriptor> trainingpt;
+    for(int i=0;i<maxitn;i++){
+        for(unsigned int j=0;j<trainingset.size();j++)
+        {
+            //cout<< i <<" "<< j<<endl;
+            float mindiff=10000000;
+            int cluster=0;
+            //trainingpt=trainingset[j];
+            for(int n=0;n<centroids.size();n++)
+            {
+
+                int diff=0;
+                for(unsigned int l=0;l<trainingset[j].size();l++)
+                {
+                    for(unsigned int m=0;m<trainingset[j][l].descriptor.size();m++)
+                    {
+                        cout<<i<<" "<<j<<" "<<n<<" "<<l<<" "<<m<<endl;
+                        cout<<centroids.size()<<endl;
+                        cout<<ran[0]<<" "<<ran[1]<<endl;
+                        diff+=abs(trainingset[j][l].descriptor[m]-centroids[n][l].descriptor[m]);
+                    }
+                }
+                if(diff<mindiff)
+                {
+                    mindiff=diff;
+                    cluster=n;
+                }
+            }
+            clusters[cluster].push_back(trainingset[j]);
+            interblockdist+=mindiff;
+        }
+        cout<<"checkpoint"<<endl;
+        //recalculate clusters
+        vector<vector<SiftDescriptor> > newcentroids;
+        for(int l=0;l<k;l++)
+        {
+            vector<SiftDescriptor> newcenter;
+            int clustersize=clusters[l].size();
+            for(int n=0;n<clustersize;n++)
+            for(int j=0;j<128;j++)
+            {
+                //newcenter.descriptor[j]=+(clusters[l][n].descriptor[j]/clustersize);
+            }
+            //push newcentroid to vec
+            clusters[l].clear();
+        }
+        centroids=newcentroids;
+        //stopping condition:
+        if(i>1)
+        {
+            if(interblockdist/previnterblockdist<0.01)
+                break;
+        }
+
+        previnterblockdist=interblockdist;
+    }
+    ////answer in clusters!
+    
+}
 int main(int argc, char **argv)
 {
 	try {
@@ -103,12 +200,37 @@ int main(int argc, char **argv)
 		if(algo == "nn")
 			classifier = new NearestNeighbor(class_list);
         
+        else if(algo == "kmeans" && mode=="train")
+        {
+            cout<<"Hey";
+            string dir = string("./train");
+            int w=10;
+            int k=2;
+            vector<string> allpathnfiles = vector<string>();
+            vector<vector<SiftDescriptor> >trainingvecs=vector<vector<SiftDescriptor> >();
+            //function into vector of vectors
+            getdirandfiles(dir,allpathnfiles);
+            for(unsigned int i=0;i<allpathnfiles.size();i++)
+            {
+                CImg<double> input(allpathnfiles[i].c_str());
+                CImg<double> resized = input.resize(w, w, 1, 3);
+                
+                CImg<double> grey = resized.spectrum() == 1? resized: resized.get_RGBtoHSI().get_channel(2);
+                vector<SiftDescriptor> d = Sift::compute_sift(grey);
+
+                trainingvecs.push_back(d);
+                //till here
+            }
+            k_means_clustering(trainingvecs,k);
+            
+        }
 		
         else if(algo == "ef" && mode=="train")
             //classifier = new NearestNeighbor(class_list);
         {
             cout<<"Hey";
             string dir = string("./train");
+            
             int w=10;
             int eigenmax=20;
             
@@ -126,6 +248,7 @@ int main(int argc, char **argv)
             std::copy(grey.begin(), grey.end(), result.begin());
                 //cout<<grey.size()<<endl;
                 trainingvecs.push_back(result);
+            
 //till here
             }
             cout<<trainingvecs.size();
