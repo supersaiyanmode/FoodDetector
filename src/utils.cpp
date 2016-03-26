@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <dirent.h>
 
 #include <utils.h>
@@ -19,3 +20,9 @@ std::vector<std::string> list_files(const std::string &directory, bool prepend_d
 	return file_list;
 }
 
+void truncate_dir(const std::string& path) {
+	std::string cmd = "rm -rf " + path;
+	std::string cmd2 = "mkdir -p " + path;
+	(void)::system(cmd.c_str());
+	(void)::system(cmd2.c_str());
+}
