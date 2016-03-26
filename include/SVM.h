@@ -2,22 +2,25 @@
 #define __SVM_H__
 
 #include <map>
+#include <fstream>
 
 #include <Classifier.h>
 
 class SVMCore {
 	std::string working_dir;
 public:
-	SVMCore(const std::string&, bool);
+	SVMCore();
 	~SVMCore();
+
+	void train(const std::string&, const std::string&);
+	void classify(const std::string&, const std::string&, const std::string&);
 };
 
 class SVM : public Classifier {
-	std::map<std::string, SVMCore*> svm_classifiers;
-	std::map<std::string, SVMCore*> svm_trainers;
-	std::string working_dir, cache_dir;
+	std::string working_dir, cache_dir, test_dir;
 
 	std::vector<double> get_feature_vector_cache(const std::string& filename, bool);
+	void write_svm_vector(const std::vector<double>&, std::ostream&, bool);
 public:
 	SVM(const std::vector<std::string>&, const std::string&);
 	virtual ~SVM();
