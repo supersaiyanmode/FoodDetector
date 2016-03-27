@@ -83,8 +83,7 @@ std::vector<double> HaarSVM::get_feature_vector(const std::string& filename,
 						+ SAT[x + 2 * midpoint_x][y + midpoint_y]);
 
 		Hy = (area1 - area2);
-		//haar_features.push_back(sqrt((Hx * Hx) + (Hy * Hy)));
-		haar_features.push_back((Hx * Hx) + (Hy * Hy));
+		haar_features.push_back(sqrt((Hx * Hx) + (Hy * Hy)));
 
 	}
 
