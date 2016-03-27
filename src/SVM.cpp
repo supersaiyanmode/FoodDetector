@@ -68,6 +68,8 @@ void SVM::train(const Dataset& data) {
 	svm_core.train(working_dir + "/input.svm", outputModel);
 }
 
+
+
 void SVM::write_svm_vector(const std::vector<double>& features, std::ostream& out, int cls) {
 	int feature_pos = 1;
 	out<<cls<<" ";

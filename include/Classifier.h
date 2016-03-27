@@ -13,7 +13,6 @@ public:
 
   // Run training on a given dataset.
   virtual void train(const Dataset &filenames) = 0;
-
   // Classify a single image.
   virtual std::string classify(const std::string &filename) = 0;
 
