@@ -6,7 +6,7 @@
 #include <SVM.h>
 
 class SiftSVM : public SVM {
-	static const int num_clusters = 5;
+	int num_clusters;
 	std::vector<std::vector<double> > visual_words;
 
 	std::string cache_dir;

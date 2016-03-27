@@ -7,6 +7,7 @@
 
 #include <SiftSVM.h>
 #include <utils.h>
+#include <Config.h>
 
 using namespace cimg_library;
 
@@ -98,6 +99,8 @@ namespace {
 SiftSVM::SiftSVM(const std::vector<std::string>& cl, const std::string& wd): SVM(cl, wd) {
 	cache_dir = wd + "/_cache";
 	truncate_dir(cache_dir);
+
+	num_clusters = config.get<int>("sift.kmeans.clustersize");
 }
 
 SiftSVM::~SiftSVM() {

@@ -30,4 +30,6 @@ public:
 	}
 };
 
+extern Config config;
+
 #endif

@@ -1,6 +1,6 @@
 #include <fstream>
 
-#include "Config.h"
+#include <Config.h>
 
 namespace {
 	std::string rtrim(const std::string& str) {
@@ -26,3 +26,5 @@ Config::Config(const std::string& str) {
 		std::cout<<"Loaded Config: "<<key<<"="<<value<<std::endl;
 	}
 }
+
+Config config("config.txt");
