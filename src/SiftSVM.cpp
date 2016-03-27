@@ -109,9 +109,12 @@ std::vector<std::vector<double> > SiftSVM::get_sift_cache(const std::string& pat
 	std::replace(replaced.begin(), replaced.end(), '/', '_');
 
 	std::string cached_file = cache_dir + "/" + replaced;
+	std::cout<<"Checking for cache: "<<cached_file<<std::endl;
 	std::ifstream in(cached_file.c_str());
-	if (in.good()) {
+	std::string temp;
+	if (in>>temp) {
 		in.close();
+		std::cout<<"    ....Loading from cache."<<std::endl;
 		return read_2dvec(cached_file);
 	}
 	in.close();
@@ -139,19 +142,22 @@ void SiftSVM::preprocess(const Dataset& data) {
 			all_descriptors.insert(all_descriptors.end(), dv.begin(), dv.end());
 		}
 	}
+	std::cout<<"Running K-Means."<<std::endl;
 	this->visual_words = kmeans2(all_descriptors, num_clusters);
+
+	std::cout<<"WOrking dir: "<<working_dir<<std::endl;
+	std::string visual_words_file = "visual_words";
+	std::cout<<"Writing model to file: "<<visual_words_file<<std::endl;
+	write_2dvec(visual_words_file, this->visual_words); 
+}
+
+void SiftSVM::load_model() {
+	this->visual_words = read_2dvec("visual_words");
+	std::cout<<"Model loaded."<<std::endl;
 }
 
 std::vector<double> SiftSVM::get_feature_vector(const std::string& filename, bool) {
-	CImg<double> img(filename.c_str());
-	CImg<double> grey = img.spectrum() == 1? img : img.get_RGBtoHSI().get_channel(2);
-	std::vector<SiftDescriptor> desc = Sift::compute_sift(grey);
-	std::vector<std::vector<double> > descv;
-	descv.reserve(desc.size());
-
-	for (std::vector<SiftDescriptor>::iterator it = desc.begin(); it != desc.end(); it++)
-		descv.push_back(to_vec(*it));
-	
+	std::vector<std::vector<double> > descv = get_sift_cache(filename);
 	std::vector<double> histogram(num_clusters, 0);
 	
 	for (std::vector<std::vector<double> >::iterator it = descv.begin(); it != descv.end(); it++) {

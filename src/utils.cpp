@@ -57,6 +57,7 @@ std::vector<std::vector<double> > read_2dvec(const std::string& file) {
 		}
 		result.push_back(res);
 	}
+	in.close();
 	return result;
 }
 

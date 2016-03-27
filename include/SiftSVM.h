@@ -16,6 +16,8 @@ public:
 	SiftSVM(const std::vector<std::string>&, const std::string&);
 	~SiftSVM();
 
+	void load_model();
+
 	std::vector<double> get_feature_vector(const std::string&, bool);
 
 	void preprocess(const Dataset&);
