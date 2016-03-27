@@ -29,6 +29,7 @@
 #include <dirent.h>
 #include <map>
 #include <numeric>
+#include <sstream>      // std::stringstream
 
 #include <errno.h>
 
@@ -229,6 +230,7 @@ int main(int argc, char **argv)
             //classifier = new NearestNeighbor(class_list);
         {
             cout<<"Hey";
+            
             string dir = string("./train");
             
             int w=10;
@@ -236,8 +238,21 @@ int main(int argc, char **argv)
             
             vector<string> allpathnfiles = vector<string>();
             vector<vector<double> > trainingvecs=vector<vector<double> >();
+            Dataset data=filenames;
+            
+            for (Dataset::const_iterator it = data.begin(); it != data.end(); it++ ) {
+                const std::vector<std::string>& files = it->second;
+                
+                for (std::vector<std::string>::const_iterator it1 = files.begin(); it1 != files.end(); it1++) {
+                    std::cout<<"  Preprocessing: "<<*it1<<std::endl;
+                    //std::vector<std::vector<double> > dv = get_sift_cache(*it1);
+                    //all_descriptors.insert(all_descriptors.end(), dv.begin(), dv.end());
+                    allpathnfiles.push_back(*it1);
+                }
+            }
+            
 //function into vector of vectors
-            getdirandfiles(dir,allpathnfiles);
+            //getdirandfiles(dir,allpathnfiles);
             for(unsigned int i=0;i<allpathnfiles.size();i++)
             {
             CImg<double> input(allpathnfiles[i].c_str());
@@ -361,27 +376,35 @@ int main(int argc, char **argv)
             for(int i=0;i<eigenmax;i++)
             {   cout<<i<<" "<<egval(0,i)<<endl;
                 
-                    int maxpixel=egvec(0,i);
+                    double maxpixel=egvec(0,i);
                     CImg<double> eigenfood(w,w);
                 
                     for(int j=0;j<w;j++)
                         for(int k=0;k<w;k++)
                         {
                             eigenfood(j,k)=egvec(j*10+k,i);
+                            cout<<"eigenfood"<<egvec(j*10+k,i)<<endl;
                             if(maxpixel<eigenfood(j,k))
                                 maxpixel=eigenfood(j,k);
                             //cout<<j<<" "<<k<<" "<<j*10+k<<" "<<i<<" "<<egvec(j*10+k,i)<<" ";
                         }
                 
                 cout<<endl;
-                cout<<maxpixel;
+                cout<<"Maxpixel:"<<maxpixel<<endl;
                         for(int j=0;j<w;j++)
                             for(int k=0;k<w;k++)
-                                eigenfood(j,k)/=maxpixel;
+                            {eigenfood(j,k)=eigenfood(j,k)*255/maxpixel;
+                            }
 
-                                    
-                if(i==0)
-                        eigenfood.save("eigenfood.png");
+                
+                
+                    stringstream ss;
+                    ss << i;
+                    string s=ss.str()+".png";
+                    //s.c_str()
+                
+                    
+                                eigenfood.save(s.c_str());
                 
                 
                 
@@ -390,6 +413,7 @@ int main(int argc, char **argv)
             }
             
             /*end here*/
+            
             
             
             /*create a new Cimg for solver to use*/
@@ -409,6 +433,69 @@ int main(int argc, char **argv)
             cout<< " " ;
             cout<< eigenvecforsolve.spectrum();
             cout<< endl;
+            
+            
+            
+            std::vector<std::vector<double> > eigenvecforsolveimg;
+            for(int i=0;i<eigenvecforsolve.width();i++)
+            {
+                std::vector<double>eigenrow;
+            for(int j=0;j<eigenvecforsolve.height();j++)
+                {
+                    eigenrow.push_back(eigenvecforsolve(i,j));
+                }
+                eigenvecforsolveimg.push_back(eigenrow);
+            
+            }
+            std::string eigen_file = "eigenvecforsolve";
+            std::cout<<"Writing model to file: "<<eigen_file<<std::endl;
+            write_2dvec(eigen_file,eigenvecforsolveimg );
+            
+            
+            std::vector<std::vector<double> > average;
+            average.push_back(avg);
+            std::string averagefile = "average";
+            std::cout<<"Writing model to file: "<<averagefile<<std::endl;
+            write_2dvec(averagefile,average );
+            ////////////////////////////////////
+            
+            eigenvecforsolveimg = read_2dvec("eigenvecforsolve");
+
+            average=read_2dvec("average");
+
+            
+            for(unsigned int i=0;i<eigenvecforsolveimg.size();i++)
+                {
+                    //std::vector<double>eigenrow;
+                    for(unsigned int j=0;j<eigenvecforsolveimg[i].size();j++)
+                    {
+                        //eigenrow.push_back(eigenvecforsolve(i,j));
+                        eigenvecforsolve(i,j)=eigenvecforsolveimg[i][j];
+                    }
+                    //eigenvecforsolveimg.push_back(eigenrow);
+                    
+                }
+            avg=average[0];
+            
+            cout<<avg.size()<<endl;
+            
+                
+                cout<<eigenvecforsolve.width();
+                cout<< " ";
+                cout<< eigenvecforsolve.height();
+                cout<< " ";
+                cout<< eigenvecforsolve.depth();
+                cout<< " " ;
+                cout<< eigenvecforsolve.spectrum();
+                cout<< endl;
+
+            std::cout<<"Model loaded."<<std::endl;
+            
+            
+            
+            
+            
+            
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //global stuff always neeeded! Cimg<double>eigenvecforsolve & vector<double>avg
             std::string filename1="./train/bagel/106970.jpg";
