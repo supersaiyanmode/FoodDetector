@@ -112,7 +112,6 @@ std::vector<std::vector<double> > SiftSVM::get_sift_cache(const std::string& pat
 	std::replace(replaced.begin(), replaced.end(), '/', '_');
 
 	std::string cached_file = cache_dir + "/" + replaced;
-	std::cout<<"Checking for cache: "<<cached_file<<std::endl;
 	std::ifstream in(cached_file.c_str());
 	std::string temp;
 	if (in>>temp) {
