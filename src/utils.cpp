@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <dirent.h>
+#include <fstream>
 
 #include <utils.h>
 #include <defs.h>
@@ -26,3 +27,36 @@ void truncate_dir(const std::string& path) {
 	(void)::system(cmd.c_str());
 	(void)::system(cmd2.c_str());
 }
+
+void write_2dvec(const std::string& file, const std::vector<std::vector<double> >& dv) {
+	std::ofstream out(file.c_str());
+	out<<dv.size()<<std::endl;
+	for (size_t i=0; i<dv.size(); i++) {
+		out<<dv[i].size()<<" ";
+		for (size_t j=0; j<dv[i].size(); j++) {
+			out<<dv[i][j]<<" ";
+		}
+		out<<std::endl;
+	}
+	out.close();
+}
+
+std::vector<std::vector<double> > read_2dvec(const std::string& file) {
+	std::ifstream in(file.c_str());
+	std::vector<std::vector<double> > result;
+	int lines;
+	in>>lines;
+	for (int i=0; i<lines; i++) {
+		int count;
+		in>>count;
+		std::vector<double> res;
+		for (int j=0; j<count; j++) {
+			double val;
+			in>>val;
+			res.push_back(val);
+		}
+		result.push_back(res);
+	}
+	return result;
+}
+

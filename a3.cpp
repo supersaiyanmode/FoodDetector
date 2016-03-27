@@ -37,6 +37,7 @@
 #include <NearestNeighbor.h>
 #include <SVM.h>
 #include <BaseSVM.h>
+#include <SiftSVM.h>
 
 //Use the cimg namespace to access the functions easily
 using namespace cimg_library;
@@ -63,6 +64,8 @@ int main(int argc, char **argv)
 			classifier = new NearestNeighbor(class_list);
 		else if (algo == "baseline")
 			classifier = new BaseSVM(class_list, "svm-test");
+		else if (algo == "bow")
+			classifier = new SiftSVM(class_list, "sift-svm");
 		else
 			throw std::string("unknown classifier " + algo);
 
