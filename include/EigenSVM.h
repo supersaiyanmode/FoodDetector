@@ -8,6 +8,8 @@ public:
 	EigenSVM(const std::vector<std::string>&, const std::string&);
 	~EigenSVM();
 
+	void preprocess(const Dataset&);
+
 	std::vector<double> get_feature_vector(const std::string&, bool);
 };
 

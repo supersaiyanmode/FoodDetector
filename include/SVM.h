@@ -23,6 +23,8 @@ class SVM : public Classifier {
 	void write_svm_vector(const std::vector<double>&, std::ostream&, int);
 
 	std::map<std::string, int> class_pos;
+protected:
+	virtual void preprocess(const Dataset&) = 0;
 public:
 	SVM(const std::vector<std::string>&, const std::string&);
 	virtual ~SVM();

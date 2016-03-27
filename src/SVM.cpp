@@ -44,6 +44,7 @@ SVM::~SVM() {
 }
 
 void SVM::train(const Dataset& data) {
+	preprocess(data);
 	truncate_dir(working_dir);
 	truncate_dir(cache_dir);
 
