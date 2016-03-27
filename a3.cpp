@@ -38,6 +38,7 @@
 #include <BaseSVM.h>
 #include <HaarSVM.h>
 #include <SiftSVM.h>
+#include <DeepSVM.h>
 
 //Use the cimg namespace to access the functions easily
 using namespace cimg_library;
@@ -66,11 +67,12 @@ int main(int argc, char **argv) {
 		if (algo == "nn")
 			classifier = new NearestNeighbor(class_list);
 		else if (algo == "baseline")
-			classifier = new BaseSVM(class_list, "svm-test");
+			classifier = new BaseSVM(class_list, "baseline-svm");
 		else if (algo == "bow")
-			classifier = new SiftSVM(class_list, "sift-svm");
+			classifier = new SiftSVM(class_list, "bow-svm");
+		else if (algo == "deep")
+			classifier = new DeepSVM(class_list, "deep-svm");
 		else if (algo == "haar") {
-
 			HaarSVM *temp = new HaarSVM(class_list, "haar-svm");
 			if (mode == "train") {
 				temp->setWindowVector(generateRandomWindows(3600));
