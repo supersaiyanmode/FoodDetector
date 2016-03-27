@@ -35,7 +35,7 @@ SVM::SVM(const std::vector<std::string>& cl, const std::string& wd):
 
 	truncate_dir(test_dir);
 
-	for (int i=0; i<cl.size(); i++) {
+	for (size_t i=0; i<cl.size(); i++) {
 		class_pos[cl[i]] = i;
 	}
 }
