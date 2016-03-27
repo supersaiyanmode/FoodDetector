@@ -38,6 +38,7 @@
 #include <SVM.h>
 #include <BaseSVM.h>
 #include <SiftSVM.h>
+#include <DeepSVM.h>
 
 //Use the cimg namespace to access the functions easily
 using namespace cimg_library;
@@ -63,9 +64,11 @@ int main(int argc, char **argv)
 		if(algo == "nn")
 			classifier = new NearestNeighbor(class_list);
 		else if (algo == "baseline")
-			classifier = new BaseSVM(class_list, "svm-test");
+			classifier = new BaseSVM(class_list, "baseline-svm");
 		else if (algo == "bow")
-			classifier = new SiftSVM(class_list, "sift-svm");
+			classifier = new SiftSVM(class_list, "bow-svm");
+		else if (algo == "deep")
+			classifier = new DeepSVM(class_list, "deep-svm");
 		else
 			throw std::string("unknown classifier " + algo);
 

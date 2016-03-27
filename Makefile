@@ -3,7 +3,7 @@
 BIN = a3
 
 # Define source files
-SRCS = ./src/Classifier.cpp ./src/NearestNeighbor.cpp ./src/SVM.cpp ./src/BOVSVM.cpp ./src/BaseSVM.cpp ./src/utils.cpp ./src/EigenSVM.cpp ./src/SiftSVM.cpp ./a3.cpp ./siftpp/sift.cpp
+SRCS = ./src/Classifier.cpp ./src/NearestNeighbor.cpp ./src/SVM.cpp ./src/BOVSVM.cpp ./src/BaseSVM.cpp ./src/DeepSVM.cpp ./src/utils.cpp ./src/EigenSVM.cpp ./src/SiftSVM.cpp ./a3.cpp ./siftpp/sift.cpp
 
 # Define header file paths
 INCPATH = -I./ -Isiftpp -I/opt/X11/include -I include/
