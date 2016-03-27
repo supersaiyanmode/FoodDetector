@@ -30,22 +30,21 @@
 #include <map>
 #include <numeric>
 
-
 #include <defs.h>
 #include <utils.h>
 #include <Classifier.h>
 #include <NearestNeighbor.h>
 #include <SVM.h>
 #include <BaseSVM.h>
+#include <HaarSVM.h>
 #include <SiftSVM.h>
 
 //Use the cimg namespace to access the functions easily
 using namespace cimg_library;
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
 	try {
-		if(argc < 3)
+		if (argc < 3)
 			throw string("Insufficent number of arguments");
 
 		std::string mode = argv[1];
@@ -53,35 +52,36 @@ int main(int argc, char **argv)
 
 		// Scan through the "train" or "test" directory (depending on the
 		//  mode) and builds a data structure of the image filenames for each class.
-		Dataset filenames; 
+		Dataset filenames;
 		std::vector<std::string> class_list = list_files(mode);
-		for(std::vector<std::string>::const_iterator c = class_list.begin(); c != class_list.end(); ++c)
+		for (std::vector<std::string>::const_iterator c = class_list.begin();
+				c != class_list.end(); ++c)
 			filenames[*c] = list_files(mode + "/" + *c, true);
 
 		// set up the classifier based on the requested algo
-		Classifier *classifier=0;
-		if(algo == "nn")
+		Classifier *classifier = 0;
+		if (algo == "nn")
 			classifier = new NearestNeighbor(class_list);
 		else if (algo == "baseline")
 			classifier = new BaseSVM(class_list, "svm-test");
 		else if (algo == "bow")
 			classifier = new SiftSVM(class_list, "sift-svm");
+		else if (algo == "haar")
+			classifier = new HaarSVM(class_list, "haar-svm");
 		else
 			throw std::string("unknown classifier " + algo);
 
 		// now train or test!
-		if(mode == "train")
+		if (mode == "train")
 			classifier->train(filenames);
-		else if(mode == "test")
+		else if (mode == "test")
 			classifier->test(filenames);
 		else
 			throw std::string("unknown mode!");
 
 		delete classifier;
-	}
-	catch(const string &err) {
+	} catch (const string &err) {
 		cerr << "Error: " << err << endl;
 	}
 }
-
 
