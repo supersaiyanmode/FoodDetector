@@ -51,6 +51,7 @@ $(BIN): $(OBJS)
 #
 clean:
 	$(RM) $(OBJS)
+	rm -f "WindowVector.dat"
 
 distclean: clean
 	$(RM) $(BIN)

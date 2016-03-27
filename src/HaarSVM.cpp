@@ -21,8 +21,9 @@ HaarSVM::~HaarSVM() {
 
 std::vector<double> HaarSVM::get_feature_vector(const std::string& filename,
 		bool) {
+	vector<HaarRow> window = this->getWindowVector();
 	CImg<double> input(filename.c_str());
-	CImg<double> resized = input.resize(40, 40, 1, 3);
+	CImg<double> resized = input.resize(60, 60, 1, 3);
 	CImg<double> grey =
 			resized.spectrum() == 1 ?
 					resized : resized.get_RGBtoHSI().get_channel(2);
@@ -52,50 +53,40 @@ std::vector<double> HaarSVM::get_feature_vector(const std::string& filename,
 		}
 	}
 
-	//Let Filter size be 1/4th of the Original Image Size
-	int filter_size = grey.width() / 8;
+	vector<double> haar_features;
 
-	int mid_point = filter_size / 2;
-
-	int X = grey.width() - filter_size - 1;
-	int Y = grey.height() - filter_size - 1;
 	double Hx, Hy;
 	double area1, area2;
-	vector<double> haar_features;
-	for (int x = 0; x < X; x++) {
+	for (size_t i = 0; i < window.size(); i++) {
+		int x = window[i].x;
+		int y = window[i].y;
+		int w = window[i].size_width;
+		int h = window[i].size_height;
+		int midpoint_x = w / 2;
+		int midpoint_y = h / 2;
+		//Hx
+		area1 = (SAT[x][y] + SAT[(x + midpoint_x)][y + 2 * midpoint_y])
+				- (SAT[x + midpoint_x][y] + SAT[x][y + 2 * midpoint_y]);
+		area2 = (SAT[x + midpoint_x][y]
+				+ SAT[x + 2 * midpoint_x][y + 2 * midpoint_y])
+				- (SAT[x + midpoint_x][y + 2 * midpoint_y]
+						+ SAT[x + 2 * midpoint_x][y]);
+		Hx = (area1 - area2);
 
-		for (int y = 0; y < Y; y++) {
-			//Calculate Hx - Sliding Window
-			area1 = (SAT[x][y] + SAT[(x + mid_point)][y + 2 * mid_point])
-					- (SAT[x + mid_point][y] + SAT[x][y + 2 * mid_point]);
+		//Hy
+		area1 = (SAT[x][y] + SAT[x + 2 * midpoint_x][y + midpoint_y])
+				- (SAT[x][y + midpoint_y] + SAT[x + 2 * midpoint_x][y]);
 
-			area2 = (SAT[x + mid_point][y]
-					+ SAT[x + 2 * mid_point][y + 2 * mid_point])
-					- (SAT[x + mid_point][y + 2 * mid_point]
-							+ SAT[x + 2 * mid_point][y]);
+		area2 = (SAT[x][y + midpoint_y]
+				+ SAT[x + 2 * midpoint_x][y + 2 * midpoint_y])
+				- (SAT[x][y + 2 * midpoint_y]
+						+ SAT[x + 2 * midpoint_x][y + midpoint_y]);
 
-			Hx = (area1 - area2) / (filter_size * filter_size);
+		Hy = (area1 - area2);
+		//haar_features.push_back(sqrt((Hx * Hx) + (Hy * Hy)));
+		haar_features.push_back((Hx * Hx) + (Hy * Hy));
 
-			//Calculate Hy - Sliding Window
-
-			area1 = (SAT[x][y] + SAT[x + 2 * mid_point][y + mid_point])
-					- (SAT[x][y + mid_point] + SAT[x + 2 * mid_point][y]);
-
-			area2 = (SAT[x][y + mid_point]
-					+ SAT[x + 2 * mid_point][y + 2 * mid_point])
-					- (SAT[x][y + 2 * mid_point]
-							+ SAT[x + 2 * mid_point][y + mid_point]);
-
-			Hy = (area1 - area2) / (filter_size * filter_size);
-			// Push the magnitude in the Vector
-
-			haar_features.push_back(sqrt((Hx * Hx) + (Hy * Hy)));
-		}
 	}
 
-	///
-	//std::vector<double> result(haar_features.size(), 0);
-	//std::copy(grey.begin(), grey.end(), result.begin());
-	//cout << haar_features.size() << endl;
 	return haar_features;
 }

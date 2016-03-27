@@ -42,6 +42,9 @@
 //Use the cimg namespace to access the functions easily
 using namespace cimg_library;
 
+vector<HaarRow> generateRandomWindows(const int);
+vector<HaarRow> readGeneratedWindows(const int);
+
 int main(int argc, char **argv) {
 	try {
 		if (argc < 3)
@@ -66,9 +69,16 @@ int main(int argc, char **argv) {
 			classifier = new BaseSVM(class_list, "svm-test");
 		else if (algo == "bow")
 			classifier = new SiftSVM(class_list, "sift-svm");
-		else if (algo == "haar")
-			classifier = new HaarSVM(class_list, "haar-svm");
-		else
+		else if (algo == "haar") {
+
+			HaarSVM *temp = new HaarSVM(class_list, "haar-svm");
+			if (mode == "train") {
+				temp->setWindowVector(generateRandomWindows(3600));
+			} else if (mode == "test") {
+				temp->setWindowVector(readGeneratedWindows(3600));
+			}
+			classifier = temp;
+		} else
 			throw std::string("unknown classifier " + algo);
 
 		// now train or test!
@@ -83,5 +93,39 @@ int main(int argc, char **argv) {
 	} catch (const string &err) {
 		cerr << "Error: " << err << endl;
 	}
+}
+
+vector<HaarRow> generateRandomWindows(const int n) {
+	vector<HaarRow> temp;
+	int i = 0;
+	cout << "Generating Random Vector" << endl;
+	FILE* fout = fopen("WindowVector.dat", "w");
+
+	int x, y, w, h;
+	while (i < n) {
+		x = rand() % 20;
+		y = rand() % 20;
+		w = rand() % 40;
+		h = rand() % 40;
+		temp.push_back(HaarRow(x, y, w, h));
+		fprintf(fout, "%d\t%d\t%d\t%d", x, y, w, h);
+		fprintf(fout, "\n");
+		i++;
+	}
+	fclose(fout);
+	return temp;
+}
+
+vector<HaarRow> readGeneratedWindows(const int n) {
+	vector<HaarRow> temp;
+	ifstream fin("WindowVector.dat");
+	int x, y, w, h;
+	int i = 0;
+	while ((fin >> x >> y >> w >> h) && (i < n)) {
+
+		temp.push_back(HaarRow(x, y, w, h));
+		i++;
+	}
+	return temp;
 }
 
