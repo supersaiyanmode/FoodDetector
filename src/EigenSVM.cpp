@@ -1,7 +1,13 @@
 #include <algorithm>
+#include <iostream>
+#include <sstream>
+
 #include <utils.h>
 #include <CImg.h>
 #include <EigenSVM.h>
+
+using namespace cimg_library;
+using namespace std;
 
 EigenSVM::EigenSVM(const std::vector<std::string>& cl, const std::string& wd): SVM(cl, wd) {
     
@@ -12,9 +18,6 @@ EigenSVM::~EigenSVM() {
 }
 
 void EigenSVM::preprocess(const Dataset& data) {
-    
-    cout<<"Hey";
-    
     string dir = string("./train");
     
     int w=40;
@@ -22,7 +25,6 @@ void EigenSVM::preprocess(const Dataset& data) {
     
     vector<string> allpathnfiles = vector<string>();
     vector<vector<double> > trainingvecs=vector<vector<double> >();
-    Dataset data=filenames;
     
     for (Dataset::const_iterator it = data.begin(); it != data.end(); it++ ) {
         const std::vector<std::string>& files = it->second;
@@ -191,7 +193,7 @@ void EigenSVM::load_model() {
     
     std::vector<std::vector<double> > average=read_2dvec("average");
     
-    CImg e(eigenvecforsolveimg.size(),eigenvecforsolveimg[0].size());
+    CImg<double> e(eigenvecforsolveimg.size(),eigenvecforsolveimg[0].size());
     for(unsigned int i=0;i<eigenvecforsolveimg.size();i++)
     {
         //std::vector<double>eigenrow;

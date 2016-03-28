@@ -6,14 +6,14 @@
 
 class EigenSVM : public SVM {
 public:
-    CImg eigenvecforsolve;
+	cimg_library::CImg<double> eigenvecforsolve;
     std::vector<double> avg;
     
     EigenSVM(const std::vector<std::string>&, const std::string&);
     ~EigenSVM();
     
     void preprocess(const Dataset&);
-    void SiftSVM::load_model();
+    void load_model();
     std::vector<double> get_feature_vector(const std::string&, bool);
 };
 
