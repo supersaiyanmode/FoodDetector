@@ -194,20 +194,20 @@ void EigenSVM::load_model() {
     std::vector<std::vector<double> > average=read_2dvec("average");
     
     CImg<double> e(eigenvecforsolveimg.size(),eigenvecforsolveimg[0].size());
-    for(unsigned int i=0;i<eigenvecforsolveimg.size();i++)
+    for( int i=0;i<eigenvecforsolveimg.size();i++)
     {
         //std::vector<double>eigenrow;
-        for(unsigned int j=0;j<eigenvecforsolveimg[i].size();j++)
+        for( int j=0;j<eigenvecforsolveimg[i].size();j++)
         {
             //eigenrow.push_back(eigenvecforsolve(i,j));
-            e(i,j)=e[i][j];
+            e(i,j)=eigenvecforsolveimg[i][j];
         }
         //eigenvecforsolveimg.push_back(eigenrow);
         
     }
     this->avg=average[0];
     
-    this->eigenvecforsolve->e;
+    this->eigenvecforsolve=e;
     std::cout<<"Model loaded."<<std::endl;
     
 }
@@ -215,7 +215,7 @@ std::vector<double> EigenSVM::get_feature_vector(const std::string& filename1, b
     //return std::vector<double>();
     //std::string filename1="./train/bagel/106970.jpg";
     int w=40;
-    int eigenmax=50;
+    //int eigenmax=50;
     CImg<double> input(filename1.c_str());
     CImg<double> resized = input.resize(w, w, 1, 3);
     
