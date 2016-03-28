@@ -34,4 +34,5 @@ train/*
 a3
 .depend
 nn_model.*.png
-
+*.swp
+*.swo
