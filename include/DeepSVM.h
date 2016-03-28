@@ -10,7 +10,7 @@ public:
 
 	std::vector<double> get_feature_vector(const std::string&, bool);
 
-	void preprocess(const Dataset&) {}
+	void preprocess(const Dataset&);
 };
 
 #endif

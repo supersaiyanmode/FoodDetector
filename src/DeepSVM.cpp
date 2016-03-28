@@ -14,6 +14,10 @@ DeepSVM::~DeepSVM() {
 
 }
 
+void DeepSVM::preprocess(const Dataset& data) {
+
+}
+
 std::vector<double> DeepSVM::get_feature_vector(const std::string& filename, bool) {
 	std::string replaced = filename;
 	std::replace(replaced.begin(), replaced.end(), '/', '_');
