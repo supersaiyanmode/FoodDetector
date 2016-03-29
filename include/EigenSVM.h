@@ -6,7 +6,8 @@
 
 class EigenSVM : public SVM {
 public:
-	cimg_library::CImg<double> eigenvecforsolve;
+	cimg_library::CImg<double> average_image;
+	cimg_library::CImg<double> eigen_values, eigen_vector;
     std::vector<double> avg;
     
     EigenSVM(const std::vector<std::string>&, const std::string&);
