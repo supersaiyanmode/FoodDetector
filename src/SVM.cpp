@@ -57,6 +57,8 @@ void SVM::train(const Dataset& data) {
 		for (std::vector<std::string>::const_iterator it1 = cur_files.begin(); it1 != cur_files.end(); it1++) {
 			std::cout<<"  Processing: "<<*it1<<std::endl;
 			std::vector<double> features = get_feature_vector(*it1, true);
+			if (features.size() == 0)
+				continue;
 			write_svm_vector(features, out, class_pos[cur_food_name]+1);
 		}
 		
