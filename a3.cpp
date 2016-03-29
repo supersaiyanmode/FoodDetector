@@ -48,89 +48,89 @@ vector<HaarRow> generateRandomWindows(const int);
 vector<HaarRow> readGeneratedWindows(const int);
 
 int main(int argc, char **argv) {
-    try {
-        if (argc < 3)
-            throw string("Insufficent number of arguments");
-        
-        std::string mode = argv[1];
-        std::string algo = argv[2];
-        
-        // Scan through the "train" or "test" directory (depending on the
-        //  mode) and builds a data structure of the image filenames for each class.
-        Dataset filenames;
-        std::vector<std::string> class_list = list_files(mode);
-        for (std::vector<std::string>::const_iterator c = class_list.begin();
-             c != class_list.end(); ++c)
-            filenames[*c] = list_files(mode + "/" + *c, true);
-        
-        // set up the classifier based on the requested algo
-        Classifier *classifier = 0;
-        if (algo == "nn")
-            classifier = new NearestNeighbor(class_list);
-        else if (algo == "baseline")
-            classifier = new BaseSVM(class_list, "baseline-svm");
-        else if (algo == "bow")
-            classifier = new SiftSVM(class_list, "bow-svm");
-        else if (algo == "deep")
-            classifier = new DeepSVM(class_list, "deep-svm");
-        else if (algo == "eigen")
-            classifier = new EigenSVM(class_list, "eigen-svm");
-        else if (algo == "haar") {
-            HaarSVM *temp = new HaarSVM(class_list, "haar-svm");
-        
-            if (mode == "train") {
-                temp->setWindowVector(generateRandomWindows(3600));
-            } else if (mode == "test") {
-                temp->setWindowVector(readGeneratedWindows(3600));
-            }
-            classifier = temp;
-        } else
-            throw std::string("unknown classifier " + algo);
-        
-        // now train or test!
-        if (mode == "train")
-            classifier->train(filenames);
-        else if (mode == "test")
-            classifier->test(filenames);
-        else
-            throw std::string("unknown mode!");
-        
-        delete classifier;
-    } catch (const string &err) {
-        cerr << "Error: " << err << endl;
-    }
+	try {
+		if (argc < 3)
+			throw string("Insufficent number of arguments");
+
+		std::string mode = argv[1];
+		std::string algo = argv[2];
+
+		// Scan through the "train" or "test" directory (depending on the
+		//  mode) and builds a data structure of the image filenames for each class.
+		Dataset filenames;
+		std::vector<std::string> class_list = list_files(mode);
+		for (std::vector<std::string>::const_iterator c = class_list.begin();
+				c != class_list.end(); ++c)
+			filenames[*c] = list_files(mode + "/" + *c, true);
+
+		// set up the classifier based on the requested algo
+		Classifier *classifier = 0;
+		if (algo == "nn")
+			classifier = new NearestNeighbor(class_list);
+		else if (algo == "baseline")
+			classifier = new BaseSVM(class_list, "baseline-svm");
+		else if (algo == "bow")
+			classifier = new SiftSVM(class_list, "bow-svm");
+		else if (algo == "deep")
+			classifier = new DeepSVM(class_list, "deep-svm");
+		else if (algo == "eigen")
+			classifier = new EigenSVM(class_list, "eigen-svm");
+		else if (algo == "haar") {
+			classifier = new HaarSVM(class_list, "haar-svm");
+
+			/*if (mode == "train") {
+			 temp->setWindowVector(generateRandomWindows(3600));
+			 } else if (mode == "test") {
+			 temp->setWindowVector(readGeneratedWindows(3600));
+			 }*/
+			//classifier = temp;
+		} else
+			throw std::string("unknown classifier " + algo);
+
+		// now train or test!
+		if (mode == "train")
+			classifier->train(filenames);
+		else if (mode == "test")
+			classifier->test(filenames);
+		else
+			throw std::string("unknown mode!");
+
+		delete classifier;
+	} catch (const string &err) {
+		cerr << "Error: " << err << endl;
+	}
 }
 
-vector<HaarRow> generateRandomWindows(const int n) {
-    vector<HaarRow> temp;
-    int i = 0;
-    cout << "Generating Random Vector" << endl;
-    FILE* fout = fopen("WindowVector.dat", "w");
-    
-    int x, y, w, h;
-    while (i < n) {
-        x = rand() % 20;
-        y = rand() % 20;
-        w = rand() % 40;
-        h = rand() % 40;
-        temp.push_back(HaarRow(x, y, w, h));
-        fprintf(fout, "%d\t%d\t%d\t%d", x, y, w, h);
-        fprintf(fout, "\n");
-        i++;
-    }
-    fclose(fout);
-    return temp;
-}
-
-vector<HaarRow> readGeneratedWindows(const int n) {
-    vector<HaarRow> temp;
-    ifstream fin("WindowVector.dat");
-    int x, y, w, h;
-    int i = 0;
-    while ((fin >> x >> y >> w >> h) && (i < n)) {
-        
-        temp.push_back(HaarRow(x, y, w, h));
-        i++;
-    }
-    return temp;
-}
+//vector<HaarRow> generateRandomWindows(const int n) {
+//    vector<HaarRow> temp;
+//    int i = 0;
+//    cout << "Generating Random Vector" << endl;
+//    FILE* fout = fopen("WindowVector.dat", "w");
+//
+//    int x, y, w, h;
+//    while (i < n) {
+//        x = rand() % 20;
+//        y = rand() % 20;
+//        w = rand() % 40;
+//        h = rand() % 40;
+//        temp.push_back(HaarRow(x, y, w, h));
+//        fprintf(fout, "%d\t%d\t%d\t%d", x, y, w, h);
+//        fprintf(fout, "\n");
+//        i++;
+//    }
+//    fclose(fout);
+//    return temp;
+//}
+//
+//vector<HaarRow> readGeneratedWindows(const int n) {
+//    vector<HaarRow> temp;
+//    ifstream fin("WindowVector.dat");
+//    int x, y, w, h;
+//    int i = 0;
+//    while ((fin >> x >> y >> w >> h) && (i < n)) {
+//
+//        temp.push_back(HaarRow(x, y, w, h));
+//        i++;
+//    }
+//    return temp;
+//}
