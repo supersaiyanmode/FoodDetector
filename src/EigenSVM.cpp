@@ -97,7 +97,7 @@ std::vector<double> EigenSVM::get_feature_vector(const std::string& filename, bo
 		CImg<double> input(filename.c_str());
 		input = input.resize(resizeX, resizeY);
 		input = input.spectrum() == 1? input: input.get_RGBtoHSI().get_channel(2);
-		result.push_back((input - average_image).unroll('x').dot((it->unroll('x')));
+		result.push_back((input - average_image).unroll('x').dot((it->unroll('x'))));
 	}
 
 	return result;
