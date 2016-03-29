@@ -21,7 +21,7 @@ void EigenSVM::preprocess(const Dataset& data) {
     string dir = string("./train");
     
     int w=40;
-    int eigenmax=50;
+    int eigenmax=200;
     
     vector<string> allpathnfiles = vector<string>();
     vector<vector<double> > trainingvecs=vector<vector<double> >();
@@ -118,8 +118,8 @@ void EigenSVM::preprocess(const Dataset& data) {
         for(int j=0;j<w;j++)
             for(int k=0;k<w;k++)
             {
-                eigenfood(j,k)=egvec(j*10+k,i);
-                cout<<"eigenfood"<<egvec(j*10+k,i)<<endl;
+                eigenfood(j,k)=egvec(j*w+k,i);
+                //cout<<"eigenfood"<<egvec(j*10+k,i)<<endl;
                 if(maxpixel<eigenfood(j,k))
                     maxpixel=eigenfood(j,k);
                 //cout<<j<<" "<<k<<" "<<j*10+k<<" "<<i<<" "<<egvec(j*10+k,i)<<" ";
@@ -228,7 +228,7 @@ std::vector<double> EigenSVM::get_feature_vector(const std::string& filename1, b
     for(int i=0;i<w;i++)
         for(int j=0;j<w;j++)
         {
-            lhs(0,i*10+j)=grey(i,j)-(this->avg[i*10+j]);
+            lhs(0,i*w+j)=grey(i,j)-(this->avg[i*w+j]);
         }
     CImg<double> ans=lhs.solve(this->eigenvecforsolve);
     
@@ -236,7 +236,7 @@ std::vector<double> EigenSVM::get_feature_vector(const std::string& filename1, b
     std::vector<double> finalresult(ans.width() * ans.height(), 0);
     
     std::copy(ans.begin(), ans.end(), finalresult.begin());
-    cout<<"finalresult"<<endl;
+    //cout<<"finalresult"<<endl;
     
     return finalresult;
     
