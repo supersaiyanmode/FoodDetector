@@ -1,4 +1,5 @@
-sift.kmeans.clustersize 30
+sift.kmeans.clustersize 100
+sift.kmeans.iterations 10
 deep.resizex 100
 deep.resizey 100
 base.forcegrey 0

@@ -68,28 +68,28 @@ namespace {
 			centroids.push_back(data[i]);
 		}
 
-		int iterations = 0;
+		int iterations = 0, max_iterations = config.get<int>("sift.kmeans.iterations");
 
 		std::vector<veclist> cur_assignments;
 		cur_assignments.resize(k);
 		cur_assignments[0] = data;
 
-		while (iterations < 10) {
+		while (iterations < max_iterations) {
+			std::cout<<"  Running K-Means. Iteration: "<<iterations<<std::endl;
 			std::vector<veclist> new_assignments;
 			new_assignments.resize(cur_assignments.size());
 
 			for (std::vector<veclist>::iterator it = cur_assignments.begin(); it != cur_assignments.end(); it++){
 				for (veclist::iterator it1 = it->begin(); it1 != it->end(); it1 ++) {
 					int pos = get_closest_vector(*it1, centroids);
-					//std::cout<<"Closest pos: "<<pos<<std::endl;
 					new_assignments[pos].push_back(*it1);
 				}
 			}
 
 			for (size_t i=0; i<new_assignments.size(); i++) {
-				centroids[i] = avg_veclist(new_assignments[i]);
+				vec new_centroid = avg_veclist(new_assignments[i]);
+				centroids[i] = new_centroid;
 			}
-
 			iterations++;
 		}
 		return centroids;
