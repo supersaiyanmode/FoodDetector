@@ -9,7 +9,7 @@ SRCS = ./src/Classifier.cpp ./src/NearestNeighbor.cpp ./src/SVM.cpp ./src/BOVSVM
 INCPATH = -I./ -Isiftpp -I/opt/X11/include -I include/
 
 # Define the -L library path(s)
-LDFLAGS = -O3 -g
+LDFLAGS = -O3
 
 # Define the -l library name(s)
 LIBS = -lX11 -lpthread

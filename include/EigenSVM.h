@@ -1,14 +1,16 @@
 #ifndef __EIGEN_SVM_H__
 #define __EIGEN_SVM_H__
 
+#include <vector>
+
 #include <SVM.h>
 #include <CImg.h>
 
 class EigenSVM : public SVM {
-public:
-	cimg_library::CImg<double> eigenvecforsolve;
-    std::vector<double> avg;
+	cimg_library::CImg<double> average_image;
+	std::vector<cimg_library::CImg<double> > eigen_vectors;
     
+public:
     EigenSVM(const std::vector<std::string>&, const std::string&);
     ~EigenSVM();
     

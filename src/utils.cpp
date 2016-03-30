@@ -1,9 +1,12 @@
 #include <cstdlib>
+#include <iostream>
 #include <dirent.h>
 #include <fstream>
 
 #include <utils.h>
 #include <defs.h>
+
+using namespace cimg_library;
 
 std::vector<std::string> list_files(const std::string &directory, bool prepend_directory)
 {
@@ -22,6 +25,7 @@ std::vector<std::string> list_files(const std::string &directory, bool prepend_d
 }
 
 void truncate_dir(const std::string& path) {
+	std::cout<<"Truncating directory: "<<path<<std::endl;
 	std::string cmd = "rm -rf " + path;
 	std::string cmd2 = "mkdir -p " + path;
 	(void)::system(cmd.c_str());
@@ -58,6 +62,29 @@ std::vector<std::vector<double> > read_2dvec(const std::string& file) {
 		result.push_back(res);
 	}
 	in.close();
+	return result;
+}
+
+
+std::vector<std::vector<double> > cimg_to_vector(const CImg<double>& input) {
+	std::vector<std::vector<double> > result;
+	for (int i=0; i<input.height(); i++) {
+		std::vector<double> row;
+		for (int j=0; j< input.width(); j++) {
+			row.push_back(input(j, i));
+		}
+		result.push_back(row);
+	}
+	return result;
+}
+
+CImg<double> vector_to_cimg(const std::vector<std::vector<double> >& input) {
+	CImg<double> result(input[0].size(), input.size());
+	for (int i=0; i<input.size(); i++) {
+		for (int j=0; j< input[0].size(); j++) {
+			result(j,i) = input[i][j];
+		}
+	}
 	return result;
 }
 
