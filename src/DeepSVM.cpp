@@ -31,7 +31,7 @@ std::vector<double> DeepSVM::get_feature_vector(const std::string& filename,
 	std::string out_file = working_dir + "/" + replaced;
 	std::string overfeat_folder = config.get<std::string>(
 			"overfeat.folder.path");
-	std::string cmd = "./" + overfeat_folder
+	std::string cmd = overfeat_folder
 			+ "bin/linux_64/overfeat -L 12 temp.jpg > " + out_file;
 	std::system(cmd.c_str());
 

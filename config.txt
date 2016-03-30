@@ -4,7 +4,7 @@ deep.resizex 100
 deep.resizey 100
 base.forcegrey 0
 haar.numberOfRandomFeatures 1600
-overfeat.folder.path overfeat/
+overfeat.folder.path ./overfeat/
 eigen.k 20
 eigen.resizeX 40
 eigen.resizeY 40
