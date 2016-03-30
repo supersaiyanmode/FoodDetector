@@ -91,7 +91,6 @@ void EigenSVM::preprocess(const Dataset& data) {
 }
 
 void EigenSVM::load_model() {
-	int resizeX = config.get<int>("eigen.resizeX"), resizeY = config.get<int>("eigen.resizeY");
 	for (int i=0, size = config.get<int>("eigen.k"); i<size; i++) {
 		std::stringstream ss;
 		ss<<working_dir<<"/eigen-vector_"<<i<<".model";

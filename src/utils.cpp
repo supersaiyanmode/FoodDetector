@@ -80,8 +80,8 @@ std::vector<std::vector<double> > cimg_to_vector(const CImg<double>& input) {
 
 CImg<double> vector_to_cimg(const std::vector<std::vector<double> >& input) {
 	CImg<double> result(input[0].size(), input.size());
-	for (int i=0; i<input.size(); i++) {
-		for (int j=0; j< input[0].size(); j++) {
+	for (size_t i=0; i<input.size(); i++) {
+		for (size_t j=0; j< input[0].size(); j++) {
 			result(j,i) = input[i][j];
 		}
 	}

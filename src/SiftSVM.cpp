@@ -20,13 +20,6 @@ namespace {
 		return res;
 	}
 
-	SiftDescriptor to_sift(const std::vector<double>& v) {
-		SiftDescriptor s;
-		for (std::vector<double>::const_iterator it = v.begin(); it != v.end(); it++)
-			s.descriptor.push_back(*it);
-		return s;
-	}
-
 	std::vector<double> avg_veclist(const std::vector<std::vector<double> >& list) {
 		std::vector<double> res(list[0].size(), 0);
 
