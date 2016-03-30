@@ -87,6 +87,10 @@ std::vector<double> HaarSVM::get_feature_vector(const std::string& filename,
 		haar_features.push_back(sqrt((Hx * Hx) + (Hy * Hy)));
 
 	}
+	
+	std::cout<<"Returning vectors: ";
+	std::copy(haar_features.begin(), haar_features.begin()+10, std::ostream_iterator<double>(std::cout, " "));
+	std::cout<<std::endl;
 
 	return haar_features;
 }
@@ -94,7 +98,7 @@ void HaarSVM::preprocess(const Dataset& data) {
 	vector<HaarRow> temp;
 	int i = 0;
 	cout << "Generating Random Vector" << endl;
-	FILE* fout = fopen((working_dir +"/WindowVector.dat").c_str(), "w");
+	FILE* fout = fopen("WindowVector.dat", "w");
 	int n = config.get<int>("haar.numberOfRandomFeatures");
 	int x, y, w, h;
 	while (i < n) {
@@ -113,7 +117,7 @@ void HaarSVM::preprocess(const Dataset& data) {
 
 void HaarSVM::load_model() {
 	vector<HaarRow> temp;
-	ifstream fin((working_dir + "/WindowVector.dat").c_str());
+	ifstream fin("WindowVector.dat");
 	int x, y, w, h;
 	int i = 0;
 	int n = config.get<int>("haar.numberOfRandomFeatures");
