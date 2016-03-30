@@ -77,13 +77,6 @@ int main(int argc, char **argv) {
 			classifier = new EigenSVM(class_list, "eigen-svm");
 		else if (algo == "haar") {
 			classifier = new HaarSVM(class_list, "haar-svm");
-
-			/*if (mode == "train") {
-			 temp->setWindowVector(generateRandomWindows(3600));
-			 } else if (mode == "test") {
-			 temp->setWindowVector(readGeneratedWindows(3600));
-			 }*/
-			//classifier = temp;
 		} else
 			throw std::string("unknown classifier " + algo);
 
