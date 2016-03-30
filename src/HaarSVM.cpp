@@ -24,7 +24,7 @@ std::vector<double> HaarSVM::get_feature_vector(const std::string& filename,
 		bool) {
 	vector<HaarRow> window = this->getWindowVector();
 	CImg<double> input(filename.c_str());
-	CImg<double> resized = input.resize(40, 40, 1, 3);
+	CImg<double> resized = input.resize(config.get<int>("haar.resizeX"), config.get<int>("haar.resizeY"), 1, 3);
 	CImg<double> grey =
 			resized.spectrum() == 1 ?
 					resized : resized.get_RGBtoHSI().get_channel(2);
@@ -94,7 +94,7 @@ void HaarSVM::preprocess(const Dataset& data) {
 	vector<HaarRow> temp;
 	int i = 0;
 	cout << "Generating Random Vector" << endl;
-	FILE* fout = fopen("WindowVector.dat", "w");
+	FILE* fout = fopen((working_dir +"/WindowVector.dat").c_str(), "w");
 	int n = config.get<int>("haar.numberOfRandomFeatures");
 	int x, y, w, h;
 	while (i < n) {
@@ -113,7 +113,7 @@ void HaarSVM::preprocess(const Dataset& data) {
 
 void HaarSVM::load_model() {
 	vector<HaarRow> temp;
-	ifstream fin("WindowVector.dat");
+	ifstream fin((working_dir + "/WindowVector.dat").c_str());
 	int x, y, w, h;
 	int i = 0;
 	int n = config.get<int>("haar.numberOfRandomFeatures");
