@@ -3,7 +3,7 @@ sift.kmeans.iterations 10
 deep.resizex 100
 deep.resizey 100
 base.forcegrey 0
-haar.numberOfRandomFeatures 1600
+haar.numberOfRandomFeatures 6400
 haar.resizeX 40
 haar.resizeY 40
 overfeat.folder.path ./overfeat/
