@@ -9,16 +9,16 @@ SRCS = ./src/Classifier.cpp ./src/NearestNeighbor.cpp ./src/SVM.cpp ./src/BOVSVM
 INCPATH = -I./ -Isiftpp -I/opt/X11/include -I include/
 
 # Define the -L library path(s)
-LDFLAGS = -O3
+LDFLAGS = -O3 -g
 
 # Define the -l library name(s)
 LIBS = -lX11 -lpthread
 
 # Define Compile Flags
-COMPILEFLAGS = -Wall -O3 -g
+COMPILEFLAGS = -Wall -O3
 
 # Define Link Flags
-LINKFLAGS = -g
+LINKFLAGS =
 
 # Do not make any changes below!
 OBJS      = $(SRCS:.cpp=.o)
