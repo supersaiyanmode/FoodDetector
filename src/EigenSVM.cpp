@@ -2,10 +2,13 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <iomanip>
+#include <iterator>
 
 #include <CImg.h>
 #include <EigenSVM.h>
 #include <Config.h>
+#include <utils.h>
 
 using namespace cimg_library;
 
@@ -52,10 +55,8 @@ void EigenSVM::preprocess(const Dataset& data) {
 	std::cout<<"Done with preprocess....\n";
 	average_image /= (double)total_images;
 
-	average_image.display();
-
 	this->average_image = average_image;
-	average_image.save((SVM::working_dir + "/average.png").c_str());
+	write_2dvec(working_dir + "/average.png", cimg_to_vector(average_image));
 
 	CImg<double> covmat = (all_data.get_transpose() * all_data) / total_images;
 
@@ -65,7 +66,6 @@ void EigenSVM::preprocess(const Dataset& data) {
 	std::cout<<"Covmat dimension: "<<covmat.width()<<" "<<covmat.height()<<std::endl;
 	std::cout<<"Eigen vector size: "<<eigen_vector.width()<<" "<<eigen_vector.height()<<std::endl;
 	std::cout<<"Eigen values size: "<<eigen_values.width()<<" "<<eigen_values.height()<<std::endl;
-
 	std::vector<std::pair<double, CImg<double> > > eigen_pairs;
 	for (size_t i=0; i<eigen_values.size(); i++) {
 		CImg<double> res(resizeX, resizeY, 1, 1);
@@ -75,21 +75,36 @@ void EigenSVM::preprocess(const Dataset& data) {
 			*dest_it = *it;
 			dest_it ++;
 		}
-		eigen_pairs.push_back(std::make_pair(eigen_values[i], eigen_vector.get_column(i)));
+		eigen_pairs.push_back(std::make_pair(eigen_values[i], res));
 	}
 	std::sort(eigen_pairs.rbegin(), eigen_pairs.rend());
 
 	int k = config.get<int>("eigen.k");
 	this->eigen_vectors = std::vector<CImg<double> >();
 	for (int i=0; i < k; i++) {
-		eigen_pairs[i].second.save((working_dir + "/eigen-vector.png").c_str(), i, 2);
+		std::stringstream ss;
+		ss<<working_dir<<"/eigen-vector_"<<i<<".model";
+		write_2dvec(ss.str(), cimg_to_vector(eigen_pairs[i].second));
 		this->eigen_vectors.push_back(eigen_pairs[i].second);
 	}
 	std::cout<<"Saved eigen food images."<<std::endl;
 }
 
+void EigenSVM::load_model() {
+	int resizeX = config.get<int>("eigen.resizeX"), resizeY = config.get<int>("eigen.resizeY");
+	for (int i=0, size = config.get<int>("eigen.k"); i<size; i++) {
+		std::stringstream ss;
+		ss<<working_dir<<"/eigen-vector_"<<i<<".model";
+		CImg<double> img = vector_to_cimg(read_2dvec(ss.str()));
+		this->eigen_vectors.push_back(img);
+
+		std::cout<<"   Loaded Eigen Vector #"<<i<<" ["<<img.width()<<"x"<<img.height()<<std::endl;
+		//img.get_normalize(0, 255).display();
+	}
+	this->average_image = vector_to_cimg(read_2dvec(working_dir + "/average.png"));
+}
+
 std::vector<double> EigenSVM::get_feature_vector(const std::string& filename, bool is_train_mode) {
-	std::cout<<"  Processing: "<<filename<<std::endl;
 	int resizeX = config.get<int>("eigen.resizeX"), resizeY = config.get<int>("eigen.resizeY");
 	std::vector<double> result;
 	
@@ -99,10 +114,8 @@ std::vector<double> EigenSVM::get_feature_vector(const std::string& filename, bo
 		input = input.spectrum() == 1? input: input.get_RGBtoHSI().get_channel(2);
 		result.push_back((input - average_image).unroll('x').dot((it->unroll('x'))));
 	}
-
+	std::cout<<"Returning vectors: ";
+	std::copy(result.begin(), result.end(), std::ostream_iterator<double>(std::cout, " "));
+	std::cout<<std::endl;
 	return result;
-}
-
-void EigenSVM::load_model() {
-
 }
