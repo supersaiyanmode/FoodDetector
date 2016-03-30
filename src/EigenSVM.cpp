@@ -101,6 +101,10 @@ void EigenSVM::load_model() {
 		std::cout<<"   Loaded Eigen Vector #"<<i<<" ["<<img.width()<<"x"<<img.height()<<std::endl;
 		//img.get_normalize(0, 255).display();
 	}
+	/*((((eigen_vectors[0], eigen_vectors[1]), eigen_vectors[2]), eigen_vectors[3]), eigen_vectors[4]).display();
+	((((eigen_vectors[5], eigen_vectors[6]), eigen_vectors[7]), eigen_vectors[8]), eigen_vectors[9]).display();
+	((((eigen_vectors[10], eigen_vectors[11]), eigen_vectors[12]), eigen_vectors[13]), eigen_vectors[14]).display();
+	((((eigen_vectors[15], eigen_vectors[16]), eigen_vectors[17]), eigen_vectors[18]), eigen_vectors[19]).display();*/
 	this->average_image = vector_to_cimg(read_2dvec(working_dir + "/average.png"));
 }
 
