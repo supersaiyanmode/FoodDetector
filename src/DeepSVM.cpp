@@ -1,8 +1,10 @@
 #include <algorithm>
 #include <fstream>
+#include<string>
 #include <iterator>
 #include <cstdlib>
 #include <CImg.h>
+#include <Config.h>
 #include <DeepSVM.h>
 using namespace cimg_library;
 
@@ -27,7 +29,10 @@ std::vector<double> DeepSVM::get_feature_vector(const std::string& filename,
 	resized.save("temp.jpg");
 	std::replace(replaced.begin(), replaced.end(), '/', '_');
 	std::string out_file = working_dir + "/" + replaced;
-	std::string cmd = "./overfeat/bin/linux_64/overfeat -L 12 temp.jpg > " + out_file;
+	std::string overfeat_folder = config.get<std::string>(
+			"overfeat.folder.path");
+	std::string cmd = "./" + overfeat_folder
+			+ "bin/linux_64/overfeat -L 12 temp.jpg > " + out_file;
 	std::system(cmd.c_str());
 
 	int n, h, w;

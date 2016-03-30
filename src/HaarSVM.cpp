@@ -5,6 +5,7 @@
 #include <vector>
 #include <HaarSVM.h>
 #include <iostream>
+#include<Config.h>
 #include<string>
 
 using namespace cimg_library;
@@ -23,7 +24,7 @@ std::vector<double> HaarSVM::get_feature_vector(const std::string& filename,
 		bool) {
 	vector<HaarRow> window = this->getWindowVector();
 	CImg<double> input(filename.c_str());
-	CImg<double> resized = input.resize(60, 60, 1, 3);
+	CImg<double> resized = input.resize(40, 40, 1, 3);
 	CImg<double> grey =
 			resized.spectrum() == 1 ?
 					resized : resized.get_RGBtoHSI().get_channel(2);
@@ -89,3 +90,39 @@ std::vector<double> HaarSVM::get_feature_vector(const std::string& filename,
 
 	return haar_features;
 }
+void HaarSVM::preprocess(const Dataset& data) {
+	vector<HaarRow> temp;
+	int i = 0;
+	cout << "Generating Random Vector" << endl;
+	FILE* fout = fopen("WindowVector.dat", "w");
+	int n = config.get<int>("haar.numberOfRandomFeatures");
+	int x, y, w, h;
+	while (i < n) {
+		x = rand() % 15;
+		y = rand() % 15;
+		w = rand() % 25;
+		h = rand() % 25;
+		temp.push_back(HaarRow(x, y, w, h));
+		fprintf(fout, "%d\t%d\t%d\t%d", x, y, w, h);
+		fprintf(fout, "\n");
+		i++;
+	}
+	fclose(fout);
+	this->setWindowVector(temp);
+}
+
+void HaarSVM::load_model() {
+	vector<HaarRow> temp;
+	ifstream fin("WindowVector.dat");
+	int x, y, w, h;
+	int i = 0;
+	int n = config.get<int>("haar.numberOfRandomFeatures");
+
+	while ((fin >> x >> y >> w >> h) && (i < n)) {
+
+		temp.push_back(HaarRow(x, y, w, h));
+		i++;
+	}
+	this->setWindowVector(temp);
+}
+

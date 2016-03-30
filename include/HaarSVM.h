@@ -21,11 +21,12 @@ public:
 	~HaarSVM();
 	std::vector<double> get_feature_vector(const std::string&, bool);
 
-	void preprocess(const Dataset&) {
-	}
+	void preprocess(const Dataset&);
 	void setWindowVector(const vector<HaarRow>& win) {
 		windows = win;
 	}
+	void load_model();
+
 	std::vector<HaarRow> getWindowVector() {
 		return windows;
 	}
