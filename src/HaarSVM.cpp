@@ -95,13 +95,13 @@ void HaarSVM::preprocess(const Dataset& data) {
 	int i = 0;
 	cout << "Generating Random Vector" << endl;
 	FILE* fout = fopen("WindowVector.dat", "w");
-	int n = config.get<int>("haar.numberOfRandomFetures");
+	int n = config.get<int>("haar.numberOfRandomFeatures");
 	int x, y, w, h;
 	while (i < n) {
-		x = rand() % 20;
-		y = rand() % 20;
-		w = rand() % 40;
-		h = rand() % 40;
+		x = rand() % 15;
+		y = rand() % 15;
+		w = rand() % 25;
+		h = rand() % 25;
 		temp.push_back(HaarRow(x, y, w, h));
 		fprintf(fout, "%d\t%d\t%d\t%d", x, y, w, h);
 		fprintf(fout, "\n");
@@ -116,7 +116,7 @@ void HaarSVM::load_model() {
 	ifstream fin("WindowVector.dat");
 	int x, y, w, h;
 	int i = 0;
-	int n = config.get<int>("haar.numberOfRandomFetures");
+	int n = config.get<int>("haar.numberOfRandomFeatures");
 
 	while ((fin >> x >> y >> w >> h) && (i < n)) {
 
